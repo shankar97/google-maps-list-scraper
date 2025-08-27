@@ -1,5 +1,4 @@
 import logging
-from pathlib import Path
 import time
 from typing import Tuple, List, Dict, Optional, Any
 
@@ -65,7 +64,7 @@ def scroll_results_panel(driver: webdriver.Chrome, times: int = 10, delay_second
         logger.warning("Results panel not found; skipping scrolling")
 
 
-def fetch_html(url: str, save_dir: Path | None = None) -> Tuple[str, int, int]:
+def fetch_html(url: str) -> Tuple[str, int, int]:
     logger = logging.getLogger(__name__)
     logger.info("Fetching raw HTML from URL: %s", url)
     driver = create_driver()
@@ -80,9 +79,6 @@ def fetch_html(url: str, save_dir: Path | None = None) -> Tuple[str, int, int]:
         containers_sel = len(driver.find_elements(By.CSS_SELECTOR, "div.m6QErb.XiKgde"))
         logger.info("Container counts — BeautifulSoup: %d, Selenium: %d", containers_bs, containers_sel)
         
-        with open('page.html', "w", encoding="utf-8") as f:
-            f.write(html)
-        logger.info("Saved page HTML to %s", 'page.html')
         return html, containers_bs, containers_sel
     finally:
         driver.quit()
@@ -115,7 +111,7 @@ def get_price_like_text(element) -> Optional[str]:
     return None
 
 
-def fetch_places(url: str, save_dir: Path | None = None) -> Dict[str, Any]:
+def fetch_places(url: str) -> Dict[str, Any]:
     """Fetch a Google Maps page and parse per-card elements into structured items.
 
     Returns a dict with shape: {"list_description": str | None, "items": [ { name, rating, description, price } ]}
